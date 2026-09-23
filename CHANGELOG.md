@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.0.3] - 2026-09-24
+
+### Fixed
+- Updated TargetFramework to `net10.0-windows` to match `Stagehand.Definitions` dependency requirements.
+
 ## [1.0.2] - 2026-09-24
 
 ### Fixed

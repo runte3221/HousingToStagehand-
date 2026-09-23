@@ -17,14 +17,13 @@ jobs:
     steps:
     - name: Checkout Repository
       uses: actions/checkout@v4
+      with:
+        submodules: recursive
 
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: |
-          8.0.x
-          9.0.x
-          10.0.x
+        dotnet-version: 10.0.x
 
     - name: Download & Extract Dalamud
       shell: pwsh
@@ -33,19 +32,22 @@ jobs:
         Expand-Archive -Path "dalamud.zip" -DestinationPath "$env:GITHUB_WORKSPACE/dalamud" -Force
 
     - name: Restore NuGet Packages
-      run: dotnet restore HousingToStagehand.csproj
+      run: dotnet restore HousingToStagehand.csproj /p:Platform="x64"
       env:
         DALAMUD_HOME: ${{ github.workspace }}/dalamud
 
     - name: Build Plugin
-      run: dotnet build HousingToStagehand.csproj -c Release --no-restore
+      run: dotnet build HousingToStagehand.csproj -c Release /p:Platform="x64" --no-restore
       env:
         DALAMUD_HOME: ${{ github.workspace }}/dalamud
 
     - name: Prepare Zip Package
       shell: pwsh
       run: |
-        $binDir = "bin/Release"
+        $binDir = "bin/x64/Release"
+        if (-not (Test-Path $binDir)) {
+          $binDir = "bin/Release"
+        }
         $staging = "staging/HousingToStagehand"
         New-Item -ItemType Directory -Force -Path $staging
         Copy-Item -Path "$binDir/*" -Destination $staging -Recurse
