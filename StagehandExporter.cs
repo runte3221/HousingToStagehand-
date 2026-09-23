@@ -38,11 +38,14 @@ public static class StagehandExporter
 
             var safeName = SanitizeFileName(stageName);
             var filePath = Path.Combine(targetDirectory, $"{safeName}.json");
+            var tempFilePath = Path.Combine(targetDirectory, $"{safeName}.tmp");
 
-            using (var stream = new FileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.None))
+            using (var stream = new FileStream(tempFilePath, FileMode.Create, FileAccess.Write, FileShare.Read))
             {
                 stage.WriteToJSONStream(stream);
             }
+
+            File.Move(tempFilePath, filePath, overwrite: true);
 
             return new ExportResult
             {

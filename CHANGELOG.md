@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.0.11] - 2026-09-24
+
+### Fixed
+- Fixed Stagehand file lock contention by saving stage JSON to a temporary file before atomically replacing the target file.
+
 ## [1.0.10] - 2026-09-24
 
 ### Fixed

@@ -50,6 +50,24 @@ MakePlace 形式のハウジングレイアウトを読み込み、Stagehand 用
 - **[repo.json](file:///c:/Users/RYO/Desktop/Brio%20to%20Stagehand/repo.json)**: Dalamud カスタムリポジトリ登録用マニフェスト。
   - URL: `https://raw.githubusercontent.com/runte3221/HousingToStagehand-/main/repo.json`
 
+### 8. 一部家具の未配置・染色疑惑の原因究明とファイル競合解消（v1.0.11）
+- **「一部家具が配置されていない」原因**:
+  - 調査対象レイアウト `CL03 Meridian Neue L.json`（作者: Thonhart）は **Lハウス専用** の広大なレイアウト。
+  - ソース家具数 565 個 + attachments 31 個 = 合計 596 個のオブジェクトが **1 個の欠落もなくステージ JSON に出力されている（未解決・スキップ 0 個）** ことを確認。
+  - しかし、検証場所がワンルームの **アパルトメント（約 10m x 10m）** であるため、アパルトメントの室内範囲に収まる家具は **わずか 43 個のみ**。
+  - 残り **553 個（93%）の家具は、アパルトメントの壁の外側（虚空）、地下フロア（床下 -6.5m 付近）、2階フロア（天井裏 +13m 付近）に配置されており、部屋の中からは物理的に視界に入らない** 状態となっていた。
+- **「全然違う色に染色されている」原因**:
+  - レイアウト付属の見本画像（`CL03 Meridian Neue.jpg`）および配布テキスト（`Description.txt`）を解析。
+  - 部屋の黒い岩肌壁や黒い床の正体は、家具の染色ではなく **「内装建具（Fixture）」** によるもの：
+    - 壁: `Amaurotine Interior Wall`（アーモロート・インテリヤウォール）
+    - 床: `Marble Flooring`（マーブルフローリング）
+    - 照明の明るさ: `Lighting Level: 0`（真っ暗）
+    - 職人の設計: ブランクパーティションにアーモロート壁紙を貼ることで黒い岩肌壁を構築している。
+  - これらはゲームの仕様上「家具」ではなく「内装建具」であるため、Stagehand で自動配置される対象ではなく、ゲーム内のハウジングメニューから手動で変更する必要がある。初期のアパルトメント（白木床・白漆喰壁・照明レベル5）のままであったため、部屋全体が白っぽく見えていた。
+- **Stagehand ファイルロック競合の解消**:
+  - Stagehand の `FileSystemWatcher` がファイル書き込み直後に読み込もうとし、共有ロック競合（`The process cannot access the file ... because it is being used by another process`）が発生していた問題を特定。
+  - `StagehandExporter.cs` において、一時ファイル（`.tmp`）に書き込んだ後に `File.Move(..., overwrite: true)` でアトミックに置換する方式に変更し、競合を完全に解消。
+
 ---
 
 ## 使い方（検証手順）
@@ -57,4 +75,7 @@ MakePlace 形式のハウジングレイアウトを読み込み、Stagehand 用
 1. ゲーム内で `/hotosta` または `/h2s` と入力してウィンドウを表示。
 2. MakePlace のレイアウト JSON を選択して **Load Layout** をクリック。
 3. **Save as Stagehand Stage (.json)** をクリックして `Documents\Stages\` に保存（または **Spawn via Stagehand (IPC)** を押して直接スポーン）。
-4. Stagehand のウィンドウでステージをリロードすると、黒やダークトーンの染色が正確に反映されます。
+4. **ハウスサイズ・内装の確認**:
+   - Lハウス用のレイアウトは Lハウス内でロードするか、アパルトメント用のレイアウトをお使いください。
+   - レイアウト作者が指定している内装建具（壁紙・床・照明の明るさ）は、ゲーム内のハウジングメニューから手動で設定してください。
+
