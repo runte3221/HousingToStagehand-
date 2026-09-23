@@ -1,46 +1,13 @@
-# HousingToStagehand プラグイン作成タスクリスト
+# タスクリスト: 染色反映の修正と家具消失の原因究明・修正
 
-- [x] プロジェクト基盤のセットアップ <!-- id: 0 -->
-    - [x] .gitignore の作成（bin, obj, _repos, IDE一時ファイル除外） <!-- id: 1 -->
-    - [x] `HousingToStagehand.csproj` の作成（Dalamud.NET.Sdk, Stagehand.Definitions, Stagehand.Api 参照） <!-- id: 2 -->
-    - [x] `HousingToStagehand.json`（Dalamud マニフェスト）の作成 <!-- id: 3 -->
-- [x] コア変換ロジックの実装 <!-- id: 4 -->
-    - [x] `Layout.cs`（MakePlace JSON データモデル・パース処理） <!-- id: 5 -->
-    - [x] `FurnitureModelResolver.cs`（Luminaシートから家具 ItemId -> .mdl パス解決） <!-- id: 6 -->
-    - [x] `LayoutToStagehandConverter.cs`（座標変換・クォータニオン補正・DyeColor・StageDefinition 構築） <!-- id: 7 -->
-- [x] Stagehand 連携層の実装 <!-- id: 8 -->
-    - [x] Stages フォルダ（`Documents\Stages\`）への JSON 出力機能 <!-- id: 9 -->
-    - [x] `Stagehand.Api` IPC を用いた一時ステージ即時スポーン・表示機能 <!-- id: 10 -->
-- [x] UI / プラグイン本体の実装 <!-- id: 11 -->
-    - [x] `Configuration.cs`（設定クラス） <!-- id: 12 -->
-    - [x] `MainWindow.cs`（ファイル選択、変換オプション、保存＆IPCスポーンボタン） <!-- id: 13 -->
-    - [x] `Plugin.cs`（コマンド `/housingtostagehand`, `/h2s` 登録、ライフサイクル管理） <!-- id: 14 -->
-- [x] GitHub リポジトリ準備 & CI ワークフロー <!-- id: 15 -->
-    - [x] `README.md` および `CHANGELOG.md` の作成 <!-- id: 16 -->
-    - [x] GitHub Actions CI ワークフロー（`.github/workflows/build.yml`）の作成 <!-- id: 17 -->
-    - [x] docs フォルダへのドキュメント同期（プロジェクト内ルール準拠） <!-- id: 18 -->
-    - [x] Git 初期化・コミット・プッシュ <!-- id: 19 -->
-    - [x] プラグイン名の変更 (`HoToSta`) と説明の削除 <!-- id: 21 -->
-    - [x] `README.md` を `# HoToSta` のみに簡素化 <!-- id: 22 -->
-    - [x] `repo.json` / `HoToSta.json` の名称更新・説明文クリア <!-- id: 23 -->
-    - [x] `HoToSta.csproj` への移行と namespace `HoToSta` の統一 <!-- id: 24 -->
-    - [x] GitHub Actions ワークフロー (`build.yml`) の更新 <!-- id: 25 -->
-    - [x] `package.json` (v1.0.9) & `CHANGELOG.md` 更新 <!-- id: 26 -->
-    - [x] Git コミット・プッシュ & ビルド完了確認 <!-- id: 27 -->
-- [x] 家具の染色反映の不具合調査 & 修正 <!-- id: 28 -->
-    - [x] Stagehand 側の色復元仕様（`MathF.Sqrt`）の調査・特定 <!-- id: 29 -->
-    - [x] `LayoutToStagehandConverter.cs` での sRGB -> リニア色空間変換（2乗）への修正 <!-- id: 30 -->
-    - [x] 既存ステージファイルの DyeColor 修正 & 動作確認 <!-- id: 31 -->
-    - [x] バージョン更新 (v1.0.10) & Git プッシュ <!-- id: 32 -->
-- [x] 配置漏れ・染色調査 & ファイルロック競合修正 (v1.0.11) <!-- id: 33 -->
-    - [x] Lハウス用レイアウト（596個中553個が部屋の外・虚空に配置）の原因特定 <!-- id: 34 -->
-    - [x] 部屋の黒色（Amaurotine壁紙、Marble床、照明0の内装建具仕様）の特定 <!-- id: 35 -->
-    - [x] `StagehandExporter.cs` でのファイルロック競合解消（アトミック一時ファイル置換） <!-- id: 36 -->
-    - [x] バージョン更新 (v1.0.11) & repo.json 更新 <!-- id: 37 -->
-    - [x] ドキュメント同期 & Git コミット・プッシュ <!-- id: 38 -->
-- [x] 家具数表示（ルート家具 vs アタッチメント）の改善 (v1.0.12) <!-- id: 39 -->
-    - [x] MakePlace のネスト構造（卓上小物等の attachments）の再帰カウント実装 <!-- id: 40 -->
-    - [x] UI に合計数と内訳（例: `596 (565 + 31 attachments)`）を表示 <!-- id: 41 -->
-    - [x] バージョン更新 (v1.0.12) & Git プッシュ <!-- id: 42 -->
-
-
+## 完了したタスク
+- [x] HousingToBrio (画像1) と Stagehand (画像2) の比較分析
+- [x] Stagehand 内部の `LiveBgObject.set_DyeColor` および FFXIV `BgObject.TrySetStainColor` のパイプライン再解析
+- [x] 未染色の家具（Stone Partition等）に `Vector4.One`（真っ白）が強制適用されて白飛びしていた原因の特定
+- [x] 染色済み家具に対する ガンマ/リニア二重変換（sRGBを2乗して渡していた）の解消
+- [x] 右側スクリーン上部に配置されている家具（Butterfly Specimen / 蝶の標本 4個）および暖炉の火（Iron Torch 3個）の特定と調査
+- [x] `LayoutToStagehandConverter.cs` の修正:
+  - 未染色家具の `DyeColor` を `Vector4.Zero` に変更（デフォルトテクスチャ保持）
+  - 染色家具の `DyeColor` を標準 sRGB [0..1] のまま渡すように変更
+- [x] バージョン更新 (v1.0.13.0)、`package.json`、`HoToSta.json`、`repo.json`、`CHANGELOG.md` 更新
+- [x] Git コミットおよびプッシュ

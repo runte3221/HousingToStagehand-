@@ -109,7 +109,7 @@ public static class LayoutToStagehandConverter
                 SafeGet(scl, 1, 1f),
                 SafeGet(scl, 2, 1f));
 
-            Vector4 dyeColor = Vector4.One;
+            Vector4 dyeColor = Vector4.Zero;
             if (options.ApplyDyeColors && entry.TryGetColorHex(out var hex) && TryParseColor(hex, out var parsedColor))
             {
                 dyeColor = parsedColor;
@@ -155,7 +155,7 @@ public static class LayoutToStagehandConverter
 
     private static bool TryParseColor(string hex, out Vector4 color)
     {
-        color = Vector4.One;
+        color = Vector4.Zero;
         var clean = hex.TrimStart('#');
         if (clean.Length < 6)
             return false;
@@ -164,14 +164,13 @@ public static class LayoutToStagehandConverter
         if (!byte.TryParse(clean.AsSpan(2, 2), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out var g)) return false;
         if (!byte.TryParse(clean.AsSpan(4, 2), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out var b)) return false;
 
-        // Stagehand expects linear color space for BgObjectDefinition.DyeColor:
-        // Stagehand's LiveBgObject applies MathF.Sqrt(value.X/Y/Z) * 255 to recover the sRGB byte color.
-        // Therefore, we convert sRGB [0..1] to linear by squaring each component (gamma 2.0).
-        float rNorm = r / 255f;
-        float gNorm = g / 255f;
-        float bNorm = b / 255f;
-
-        color = new Vector4(rNorm * rNorm, gNorm * gNorm, bNorm * bNorm, 1f);
+        // Stagehand expects standard sRGB [0..1] in BgObjectDefinition.DyeColor.
+        // Inside Stagehand's LiveBgObject:
+        //   byteColor = Sqrt(val) * 255
+        // Then inside the game's TrySetStainColor:
+        //   LinearFloatColor = (byteColor / 255)^2 = Sqrt(val)^2 = val
+        // Therefore, passing standard sRGB [0..1] exactly cancels out and preserves the intended color.
+        color = new Vector4(r / 255f, g / 255f, b / 255f, 1f);
         return true;
     }
 }

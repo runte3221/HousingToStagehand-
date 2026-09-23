@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.0.13] - 2026-09-24
+
+### Fixed
+- Fixed unstained furniture defaulting to pure white (`Vector4.One`) which caused whiteout / washed-out rendering (e.g. Stone Partitions and butterflies). Now defaults to `Vector4.Zero` so game model's original textures are preserved.
+- Corrected dye color pipeline by passing standard sRGB directly instead of squaring components, perfectly matching Stagehand's internal `MathF.Sqrt` restoration logic.
+
 ## [1.0.12] - 2026-09-24
 
 ### Changed
