@@ -51,31 +51,18 @@ jobs:
       env:
         DALAMUD_HOME: ${{ github.workspace }}/dalamud
 
-    - name: Prepare Zip Package
+    - name: Locate & Prepare Distribution Package
       shell: pwsh
       run: |
-        $candidateDirs = @(
-          "bin/x64/Release/HousingToStagehand",
-          "bin/Release/HousingToStagehand",
-          "bin/x64/Release",
-          "bin/Release"
-        )
-        $targetDir = ""
-        foreach ($dir in $candidateDirs) {
-          if ((Test-Path "$dir/HousingToStagehand.json") -or (Test-Path "$dir/HousingToStagehand.dll")) {
-            $targetDir = $dir
-            break
-          }
+        $dalamudZip = Get-ChildItem -Path "bin" -Filter "latest.zip" -Recurse | Select-Object -First 1
+        if ($dalamudZip) {
+          Write-Output "Found Dalamud generated package at: $($dalamudZip.FullName)"
+          Copy-Item -Path $dalamudZip.FullName -Destination "latest.zip" -Force
+        } else {
+          Write-Error "Dalamud generated latest.zip not found under bin/!"
+          Get-ChildItem -Path "bin" -Recurse
+          exit 1
         }
-        if ([string]::IsNullOrWhiteSpace($targetDir)) {
-          $targetDir = "bin/Release"
-        }
-        Write-Output "Packaging from: $targetDir"
-        Get-ChildItem -Path $targetDir
-        if (-not (Test-Path "$targetDir/HousingToStagehand.json")) {
-          Copy-Item -Path "HousingToStagehand.json" -Destination $targetDir -Force
-        }
-        Compress-Archive -Path "$targetDir/*" -DestinationPath "latest.zip" -Force
 
     - name: Create or Update GitHub Release
       uses: softprops/action-gh-release@v2

@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.0.8] - 2026-09-24
+
+### Fixed
+- Fixed release archive by using the official DalamudPackager generated `latest.zip` containing all dependencies and manifests.
+
 ## [1.0.7] - 2026-09-24
 
 ### Fixed
