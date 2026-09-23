@@ -17,8 +17,6 @@ jobs:
     steps:
     - name: Checkout Repository
       uses: actions/checkout@v4
-      with:
-        submodules: recursive
 
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
@@ -26,14 +24,25 @@ jobs:
         dotnet-version: |
           8.0.x
           9.0.x
+          10.0.x
+
+    - name: Download & Extract Dalamud
+      shell: pwsh
+      run: |
+        Invoke-WebRequest -Uri "https://goatcorp.github.io/dalamud-distrib/stg/latest.zip" -OutFile "dalamud.zip"
+        Expand-Archive -Path "dalamud.zip" -DestinationPath "$env:GITHUB_WORKSPACE/dalamud" -Force
 
     - name: Restore NuGet Packages
       run: dotnet restore HousingToStagehand.csproj
+      env:
+        DALAMUD_HOME: ${{ github.workspace }}/dalamud
 
     - name: Build Plugin
       run: dotnet build HousingToStagehand.csproj -c Release --no-restore
+      env:
+        DALAMUD_HOME: ${{ github.workspace }}/dalamud
 
-    - name: Prepare Zip Distribution Package
+    - name: Prepare Zip Package
       shell: pwsh
       run: |
         $binDir = "bin/Release"
@@ -42,19 +51,13 @@ jobs:
         Copy-Item -Path "$binDir/*" -Destination $staging -Recurse
         Compress-Archive -Path "staging/*" -DestinationPath "latest.zip" -Force
 
-    - name: Upload Build Artifacts
-      uses: actions/upload-artifact@v4
-      with:
-        name: HousingToStagehand
-        path: latest.zip
-
     - name: Create or Update GitHub Release
       uses: softprops/action-gh-release@v2
       with:
         tag_name: latest
         name: "HousingToStagehand Latest Release"
         body: |
-          Automated release build of HousingToStagehand for Dalamud.
+          Automated release build of HousingToStagehand.
           
           ### Custom Repository URL
           ```
