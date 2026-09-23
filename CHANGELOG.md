@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.0.5] - 2026-09-24
+
+### Changed
+- Added verbose build logging to CI workflow to capture compilation diagnostics.
+
 ## [1.0.4] - 2026-09-24
 
 ### Fixed
