@@ -29,7 +29,8 @@ public sealed class Plugin : IDalamudPlugin
         ICommandManager commandManager,
         IPluginLog log,
         IDataManager dataManager,
-        IClientState clientState)
+        IClientState clientState,
+        IObjectTable objectTable)
     {
         _pluginInterface = pluginInterface;
         _commandManager = commandManager;
@@ -51,6 +52,7 @@ public sealed class Plugin : IDalamudPlugin
             _pluginInterface,
             clientState,
             dataManager,
+            objectTable,
             _ipcClient);
 
         _windowSystem.AddWindow(_mainWindow);

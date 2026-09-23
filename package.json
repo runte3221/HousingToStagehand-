@@ -1,6 +1,6 @@
 {
   "name": "housing-to-stagehand",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "Dalamud plugin converting MakePlace housing layout files into Stagehand stages",
   "author": "runte3221",
   "license": "MIT",

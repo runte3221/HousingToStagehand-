@@ -98,6 +98,9 @@ public sealed class StagehandIpcClient : IDisposable
             ClearStage();
         }
 
-        _api.Dispose();
+        if (_api is IDisposable disposable)
+        {
+            disposable.Dispose();
+        }
     }
 }

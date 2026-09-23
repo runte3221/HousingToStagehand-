@@ -19,6 +19,7 @@ public sealed class MainWindow : Window, IDisposable
     private readonly IDalamudPluginInterface _pluginInterface;
     private readonly IClientState _clientState;
     private readonly IDataManager _dataManager;
+    private readonly IObjectTable _objectTable;
     private readonly StagehandIpcClient _ipcClient;
 
     private string _layoutPathInput = string.Empty;
@@ -43,6 +44,7 @@ public sealed class MainWindow : Window, IDisposable
         IDalamudPluginInterface pluginInterface,
         IClientState clientState,
         IDataManager dataManager,
+        IObjectTable objectTable,
         StagehandIpcClient ipcClient)
         : base("Housing To Stagehand (/housingtostagehand or /h2s)###housing_to_stagehand_main", ImGuiWindowFlags.None)
     {
@@ -52,6 +54,7 @@ public sealed class MainWindow : Window, IDisposable
         _pluginInterface = pluginInterface;
         _clientState = clientState;
         _dataManager = dataManager;
+        _objectTable = objectTable;
         _ipcClient = ipcClient;
 
         Size = new Vector2(560, 680);
@@ -299,13 +302,14 @@ public sealed class MainWindow : Window, IDisposable
         if (_loadedLayout is null)
             return null;
 
+        var localPlayer = _objectTable.Length > 0 ? _objectTable[0] : null;
         var options = new ConversionOptions
         {
             IncludeInterior = _plugin.Configuration.IncludeInterior,
             IncludeExterior = _plugin.Configuration.IncludeExterior,
             ApplyDyeColors = _plugin.Configuration.ApplyDyeColors,
-            PositionOffset = _plugin.Configuration.AnchorToPlayerPosition && _clientState.LocalPlayer is not null
-                ? _clientState.LocalPlayer.Position
+            PositionOffset = _plugin.Configuration.AnchorToPlayerPosition && localPlayer is not null
+                ? localPlayer.Position
                 : Vector3.Zero,
         };
 
