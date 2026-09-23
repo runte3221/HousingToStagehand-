@@ -54,14 +54,28 @@ jobs:
     - name: Prepare Zip Package
       shell: pwsh
       run: |
-        $binDir = "bin/x64/Release"
-        if (-not (Test-Path $binDir)) {
-          $binDir = "bin/Release"
+        $candidateDirs = @(
+          "bin/x64/Release/HousingToStagehand",
+          "bin/Release/HousingToStagehand",
+          "bin/x64/Release",
+          "bin/Release"
+        )
+        $targetDir = ""
+        foreach ($dir in $candidateDirs) {
+          if ((Test-Path "$dir/HousingToStagehand.json") -or (Test-Path "$dir/HousingToStagehand.dll")) {
+            $targetDir = $dir
+            break
+          }
         }
-        $staging = "staging/HousingToStagehand"
-        New-Item -ItemType Directory -Force -Path $staging
-        Copy-Item -Path "$binDir/*" -Destination $staging -Recurse
-        Compress-Archive -Path "staging/*" -DestinationPath "latest.zip" -Force
+        if ([string]::IsNullOrWhiteSpace($targetDir)) {
+          $targetDir = "bin/Release"
+        }
+        Write-Output "Packaging from: $targetDir"
+        Get-ChildItem -Path $targetDir
+        if (-not (Test-Path "$targetDir/HousingToStagehand.json")) {
+          Copy-Item -Path "HousingToStagehand.json" -Destination $targetDir -Force
+        }
+        Compress-Archive -Path "$targetDir/*" -DestinationPath "latest.zip" -Force
 
     - name: Create or Update GitHub Release
       uses: softprops/action-gh-release@v2
