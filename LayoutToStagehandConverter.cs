@@ -164,7 +164,14 @@ public static class LayoutToStagehandConverter
         if (!byte.TryParse(clean.AsSpan(2, 2), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out var g)) return false;
         if (!byte.TryParse(clean.AsSpan(4, 2), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out var b)) return false;
 
-        color = new Vector4(r / 255f, g / 255f, b / 255f, 1f);
+        // Stagehand expects linear color space for BgObjectDefinition.DyeColor:
+        // Stagehand's LiveBgObject applies MathF.Sqrt(value.X/Y/Z) * 255 to recover the sRGB byte color.
+        // Therefore, we convert sRGB [0..1] to linear by squaring each component (gamma 2.0).
+        float rNorm = r / 255f;
+        float gNorm = g / 255f;
+        float bNorm = b / 255f;
+
+        color = new Vector4(rNorm * rNorm, gNorm * gNorm, bNorm * bNorm, 1f);
         return true;
     }
 }

@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.0.10] - 2026-09-24
+
+### Fixed
+- Fixed furniture dye color calculation by converting sRGB values to linear color space (squaring normalized components), matching Stagehand's internal `MathF.Sqrt` restoration logic.
+
 ## [1.0.9] - 2026-09-24
 
 ### Changed

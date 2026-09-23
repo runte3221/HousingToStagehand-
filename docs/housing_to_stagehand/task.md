@@ -27,3 +27,8 @@
     - [x] GitHub Actions ワークフロー (`build.yml`) の更新 <!-- id: 25 -->
     - [x] `package.json` (v1.0.9) & `CHANGELOG.md` 更新 <!-- id: 26 -->
     - [x] Git コミット・プッシュ & ビルド完了確認 <!-- id: 27 -->
+- [x] 家具の染色反映の不具合調査 & 修正 <!-- id: 28 -->
+    - [x] Stagehand 側の色復元仕様（`MathF.Sqrt`）の調査・特定 <!-- id: 29 -->
+    - [x] `LayoutToStagehandConverter.cs` での sRGB -> リニア色空間変換（2乗）への修正 <!-- id: 30 -->
+    - [x] 既存ステージファイルの DyeColor 修正 & 動作確認 <!-- id: 31 -->
+    - [x] バージョン更新 (v1.0.10) & Git プッシュ <!-- id: 32 -->
