@@ -1,0 +1,38 @@
+name: Build & Package
+
+on:
+  push:
+    branches: [ main, master ]
+    tags:
+      - 'v*'
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+      with:
+        submodules: recursive
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: |
+          8.0.x
+          9.0.x
+
+    - name: Restore NuGet Packages
+      run: dotnet restore HousingToStagehand.csproj
+
+    - name: Build Plugin
+      run: dotnet build HousingToStagehand.csproj -c Release --no-restore
+
+    - name: Upload Build Artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: HousingToStagehand
+        path: bin/Release/

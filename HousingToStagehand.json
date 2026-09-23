@@ -1,0 +1,24 @@
+{
+  "Author": "runte3221",
+  "Name": "Housing To Stagehand",
+  "InternalName": "HousingToStagehand",
+  "AssemblyVersion": "1.0.0.0",
+  "Description": "Loads MakePlace housing layout files (.json) and converts them into Stagehand stages (.json) or directly spawns them via Stagehand IPC.",
+  "ApplicableVersion": "any",
+  "RepoUrl": "https://github.com/runte3221/HousingToStagehand-",
+  "Tags": [
+    "stagehand",
+    "housing",
+    "furniture",
+    "makeplace",
+    "gpose",
+    "stage"
+  ],
+  "DalamudApiLevel": 15,
+  "LoadRequiredState": 0,
+  "LoadSync": false,
+  "CanUnloadAsync": false,
+  "LoadPriority": 0,
+  "Punchline": "Import MakePlace layouts directly into Stagehand!",
+  "AcceptsFeedback": true
+}

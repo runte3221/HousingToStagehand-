@@ -1,0 +1,22 @@
+# HousingToStagehand プラグイン作成タスクリスト
+
+- [x] プロジェクト基盤のセットアップ <!-- id: 0 -->
+    - [x] .gitignore の作成（bin, obj, _repos, IDE一時ファイル除外） <!-- id: 1 -->
+    - [x] `HousingToStagehand.csproj` の作成（Dalamud.NET.Sdk, Stagehand.Definitions, Stagehand.Api 参照） <!-- id: 2 -->
+    - [x] `HousingToStagehand.json`（Dalamud マニフェスト）の作成 <!-- id: 3 -->
+- [x] コア変換ロジックの実装 <!-- id: 4 -->
+    - [x] `Layout.cs`（MakePlace JSON データモデル・パース処理） <!-- id: 5 -->
+    - [x] `FurnitureModelResolver.cs`（Luminaシートから家具 ItemId -> .mdl パス解決） <!-- id: 6 -->
+    - [x] `LayoutToStagehandConverter.cs`（座標変換・クォータニオン補正・DyeColor・StageDefinition 構築） <!-- id: 7 -->
+- [x] Stagehand 連携層の実装 <!-- id: 8 -->
+    - [x] Stages フォルダ（`Documents\Stages\`）への JSON 出力機能 <!-- id: 9 -->
+    - [x] `Stagehand.Api` IPC を用いた一時ステージ即時スポーン・表示機能 <!-- id: 10 -->
+- [x] UI / プラグイン本体の実装 <!-- id: 11 -->
+    - [x] `Configuration.cs`（設定クラス） <!-- id: 12 -->
+    - [x] `MainWindow.cs`（ファイル選択、変換オプション、保存＆IPCスポーンボタン） <!-- id: 13 -->
+    - [x] `Plugin.cs`（コマンド `/housingtostagehand`, `/h2s` 登録、ライフサイクル管理） <!-- id: 14 -->
+- [x] GitHub リポジトリ準備 & CI ワークフロー <!-- id: 15 -->
+    - [x] `README.md` および `CHANGELOG.md` の作成 <!-- id: 16 -->
+    - [x] GitHub Actions CI ワークフロー（`.github/workflows/build.yml`）の作成 <!-- id: 17 -->
+    - [ ] docs フォルダへのドキュメント同期（プロジェクト内ルール準拠） <!-- id: 18 -->
+    - [ ] Git 初期化・コミット・プッシュ <!-- id: 19 -->
