@@ -6,6 +6,17 @@ Now you can decorate venues, void stages, and photoshoot scenes with complete ho
 
 ---
 
+## Install / インストール方法
+
+1. ゲーム内で `/xlsettings` を開き、**Experimental（高度な設定 / 実験的機能）** タブを選択します。
+2. **Custom Plugin Repositories（カスタムプラグインリポジトリ）** に以下の URL を追加し、**Save（保存）** をクリックします：
+   ```
+   https://raw.githubusercontent.com/runte3221/HousingToStagehand-/main/repo.json
+   ```
+3. ゲーム内で `/xlplugins` を開き、プラグイン一覧から **HousingToStagehand** を検索してインストールします。
+
+---
+
 ## Features / 主な機能
 
 - **Direct Stagehand Export**: Converts MakePlace layout files into standard Stagehand `.json` files saved directly into your `Documents\Stages\` folder.

@@ -1,0 +1,16 @@
+[
+  {
+    "Author": "runte3221",
+    "Name": "Housing To Stagehand",
+    "InternalName": "HousingToStagehand",
+    "AssemblyVersion": "1.0.0.0",
+    "Description": "Loads MakePlace housing layout files (.json) and converts them into Stagehand stages (.json) or directly spawns them via Stagehand IPC.",
+    "ApplicableVersion": "any",
+    "RepoUrl": "https://github.com/runte3221/HousingToStagehand-",
+    "DalamudApiLevel": 15,
+    "DownloadLinkInstall": "https://github.com/runte3221/HousingToStagehand-/releases/download/latest/latest.zip",
+    "DownloadLinkTesting": "https://github.com/runte3221/HousingToStagehand-/releases/download/latest/latest.zip",
+    "DownloadLinkUpdate": "https://github.com/runte3221/HousingToStagehand-/releases/download/latest/latest.zip",
+    "IconUrl": "https://raw.githubusercontent.com/runte3221/HousingToStagehand-/main/HousingToStagehand.png"
+  }
+]

@@ -32,6 +32,8 @@ MakePlace 形式のハウジングレイアウトを読み込み、Stagehand 用
 ### 5. CI/CD & ドキュメント
 - **[.github/workflows/build.yml](file:///c:/Users/RYO/Desktop/Brio%20to%20Stagehand/.github/workflows/build.yml)**: GitHub Actions での自動ビルド＆パッケージングワークフロー。
 - **[README.md](file:///c:/Users/RYO/Desktop/Brio%20to%20Stagehand/README.md)** / **[CHANGELOG.md](file:///c:/Users/RYO/Desktop/Brio%20to%20Stagehand/CHANGELOG.md)**: 説明書と変更履歴。
+- **[repo.json](file:///c:/Users/RYO/Desktop/Brio%20to%20Stagehand/repo.json)**: Dalamud カスタムリポジトリ登録用マニフェスト。
+  - URL: `https://raw.githubusercontent.com/runte3221/HousingToStagehand-/main/repo.json`
 
 ---
 

@@ -1,12 +1,14 @@
-name: Build & Package
+name: Build & Release
 
 on:
   push:
     branches: [ main, master ]
     tags:
       - 'v*'
-  pull_request:
-    branches: [ main, master ]
+  workflow_dispatch:
+
+permissions:
+  contents: write
 
 jobs:
   build:
@@ -31,8 +33,36 @@ jobs:
     - name: Build Plugin
       run: dotnet build HousingToStagehand.csproj -c Release --no-restore
 
+    - name: Prepare Zip Distribution Package
+      shell: pwsh
+      run: |
+        $binDir = "bin/Release"
+        $staging = "staging/HousingToStagehand"
+        New-Item -ItemType Directory -Force -Path $staging
+        Copy-Item -Path "$binDir/*" -Destination $staging -Recurse
+        Compress-Archive -Path "staging/*" -DestinationPath "latest.zip" -Force
+
     - name: Upload Build Artifacts
       uses: actions/upload-artifact@v4
       with:
         name: HousingToStagehand
-        path: bin/Release/
+        path: latest.zip
+
+    - name: Create or Update GitHub Release
+      uses: softprops/action-gh-release@v2
+      with:
+        tag_name: latest
+        name: "HousingToStagehand Latest Release"
+        body: |
+          Automated release build of HousingToStagehand for Dalamud.
+          
+          ### Custom Repository URL
+          ```
+          https://raw.githubusercontent.com/runte3221/HousingToStagehand-/main/repo.json
+          ```
+        files: |
+          latest.zip
+        draft: false
+        prerelease: false
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

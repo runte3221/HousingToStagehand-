@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.0.1] - 2026-09-24
+
+### Added
+- Added `repo.json` for Dalamud Custom Plugin Repository registration.
+- Added automated GitHub Releases workflow to publish distribution zips on push.
+- Updated `README.md` with in-game installation guide.
+
 ## [1.0.0.0] - 2026-09-24
 
 ### Added
