@@ -128,8 +128,30 @@ public sealed class MainWindow : Window, IDisposable
         {
             ImGui.Spacing();
             ImGui.TextUnformatted($"House size: {(string.IsNullOrEmpty(layout.HouseSize) ? "Unknown" : layout.HouseSize)}");
-            ImGui.TextUnformatted($"Interior furniture: {layout.InteriorFurniture.Count}");
-            ImGui.TextUnformatted($"Exterior furniture: {layout.ExteriorFurniture.Count}");
+            var interiorTotal = layout.GetTotalInteriorFurnitureCount();
+            var interiorDirect = layout.InteriorFurniture.Count;
+            var interiorAttach = interiorTotal - interiorDirect;
+            if (interiorAttach > 0)
+            {
+                ImGui.TextUnformatted($"Interior furniture: {interiorTotal} ({interiorDirect} + {interiorAttach} attachments)");
+            }
+            else
+            {
+                ImGui.TextUnformatted($"Interior furniture: {interiorTotal}");
+            }
+
+            var exteriorTotal = layout.GetTotalExteriorFurnitureCount();
+            var exteriorDirect = layout.ExteriorFurniture.Count;
+            var exteriorAttach = exteriorTotal - exteriorDirect;
+            if (exteriorAttach > 0)
+            {
+                ImGui.TextUnformatted($"Exterior furniture: {exteriorTotal} ({exteriorDirect} + {exteriorAttach} attachments)");
+            }
+            else
+            {
+                ImGui.TextUnformatted($"Exterior furniture: {exteriorTotal}");
+            }
+
             ImGui.TextUnformatted($"Fixtures (walls/floors, skipped): {layout.InteriorFixture.Count + layout.ExteriorFixture.Count}");
 
             var currentSize = HouseSizeDetector.GetCurrentIndoorHouseSize(_clientState, _dataManager);

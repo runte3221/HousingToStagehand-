@@ -8,9 +8,9 @@
 		<LangVersion>latest</LangVersion>
 		<AllowUnsafeBlocks>false</AllowUnsafeBlocks>
 		<UseWindowsForms>true</UseWindowsForms>
-		<Version>1.0.11.0</Version>
-		<AssemblyVersion>1.0.11.0</AssemblyVersion>
-		<FileVersion>1.0.11.0</FileVersion>
+		<Version>1.0.12.0</Version>
+		<AssemblyVersion>1.0.12.0</AssemblyVersion>
+		<FileVersion>1.0.12.0</FileVersion>
 		<AssemblyName>HoToSta</AssemblyName>
 		<RootNamespace>HoToSta</RootNamespace>
 		<ProduceReferenceAssembly>false</ProduceReferenceAssembly>

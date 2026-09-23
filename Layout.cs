@@ -32,6 +32,23 @@ public sealed class LayoutFile
 
     [JsonPropertyName("exteriorFixture")]
     public List<FixtureEntry> ExteriorFixture { get; set; } = new();
+
+    public int GetTotalInteriorFurnitureCount() => CountRecursive(InteriorFurniture);
+    public int GetTotalExteriorFurnitureCount() => CountRecursive(ExteriorFurniture);
+
+    private static int CountRecursive(List<FurnitureEntry> list)
+    {
+        var count = 0;
+        foreach (var item in list)
+        {
+            count++;
+            if (item.Attachments is not null)
+            {
+                count += CountRecursive(item.Attachments);
+            }
+        }
+        return count;
+    }
 }
 
 /// <summary>

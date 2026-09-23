@@ -66,7 +66,15 @@ MakePlace 形式のハウジングレイアウトを読み込み、Stagehand 用
   - これらはゲームの仕様上「家具」ではなく「内装建具」であるため、Stagehand で自動配置される対象ではなく、ゲーム内のハウジングメニューから手動で変更する必要がある。初期のアパルトメント（白木床・白漆喰壁・照明レベル5）のままであったため、部屋全体が白っぽく見えていた。
 - **Stagehand ファイルロック競合の解消**:
   - Stagehand の `FileSystemWatcher` がファイル書き込み直後に読み込もうとし、共有ロック競合（`The process cannot access the file ... because it is being used by another process`）が発生していた問題を特定。
-  - `StagehandExporter.cs` において、一時ファイル（`.tmp`）に書き込んだ後に `File.Move(..., overwrite: true)` でアトミックに置換する方式に変更し、競合を完全に解消。
+### 9. 家具数表示（ルート家具 vs アタッチメント）の改善（v1.0.12）
+- **現象・疑問**:
+  - レイアウト全体の家具数は 596 個であるのに対し、UI 上に `Interior furniture: 565` と表示されていた。
+- **原因**:
+  - MakePlace のデータ構造上、机や棚などの家具がルートの `interiorFurniture`（565個）として定義され、その上に置かれる小物（本・食器・ランプ等）は各家具の `attachments`（31個）として入れ子（ネスト）構造で格納されている。
+  - 変換処理（`LayoutToStagehandConverter`）ではアタッチメントも含めた全 596 個を正常に配置していたが、UI上の事前表示ではルート配列数（565）のみを表示していたため、不一致に見えていた。
+- **修正内容**:
+  - `Layout.cs` にネストされた attachments を再帰的にカウントするヘルパーメソッドを追加。
+  - `MainWindow.cs` の表示を改修し、`Interior furniture: 596 (565 + 31 attachments)` のようにアタッチメントを含めた合計値および内訳を明確に表示するよう改善。
 
 ---
 

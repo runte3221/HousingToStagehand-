@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.0.12] - 2026-09-24
+
+### Changed
+- Improved furniture count display in UI to include recursive attachments (tabletop decor) alongside root furniture counts (e.g. `596 (565 + 31 attachments)`).
+
 ## [1.0.11] - 2026-09-24
 
 ### Fixed
