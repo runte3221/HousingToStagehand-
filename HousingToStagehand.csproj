@@ -20,7 +20,7 @@
 
 	<ItemGroup>
 		<PackageReference Include="Stagehand.Definitions" Version="0.4.15" />
-		<PackageReference Include="Stagehand.Api" Version="1.2.0" />
+		<PackageReference Include="Stagehand.Api" Version="0.4.15" />
 	</ItemGroup>
 
 	<ItemGroup>

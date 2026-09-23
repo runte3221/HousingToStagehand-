@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.0.4] - 2026-09-24
+
+### Fixed
+- Fixed invalid package version of `Stagehand.Api` from `1.2.0` to `0.4.15`.
+
 ## [1.0.3] - 2026-09-24
 
 ### Fixed
