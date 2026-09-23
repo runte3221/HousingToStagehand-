@@ -43,6 +43,7 @@
 | ファイル | 変更内容 |
 |---|---|
 | `LayoutToStagehandConverter.cs` | 未染色家具の `DyeColor` を `Vector4.Zero` に変更（本来のテクスチャを保持）。`TryParseColor` で sRGB [0..1] をそのまま渡すよう修正 |
+| `HoToSta.csproj` | バージョンを `1.0.13.0` に更新（Dalamudのバージョン一致チェック対策） |
 | `package.json` | バージョンを `1.0.13` に更新 |
 | `HoToSta.json` | `AssemblyVersion` を `1.0.13.0` に更新 |
 | `repo.json` | `AssemblyVersion` を `1.0.13.0` に更新 |
