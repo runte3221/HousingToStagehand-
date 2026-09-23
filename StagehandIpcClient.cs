@@ -5,11 +5,11 @@ using Dalamud.Plugin.Services;
 using Stagehand.Api;
 using Stagehand.Definitions;
 
-namespace HousingToStagehand;
+namespace HoToSta;
 
 public sealed class StagehandIpcClient : IDisposable
 {
-    private const string TemporaryStageId = "HousingToStagehand_LivePreview";
+    private const string TemporaryStageId = "HoToSta_LivePreview";
 
     private readonly IDalamudPluginInterface _pluginInterface;
     private readonly IPluginLog _log;

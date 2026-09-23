@@ -20,4 +20,10 @@
     - [x] GitHub Actions CI ワークフロー（`.github/workflows/build.yml`）の作成 <!-- id: 17 -->
     - [x] docs フォルダへのドキュメント同期（プロジェクト内ルール準拠） <!-- id: 18 -->
     - [x] Git 初期化・コミット・プッシュ <!-- id: 19 -->
-    - [x] 自動リリースビルドの修正・正常完了確認 <!-- id: 20 -->
+    - [x] プラグイン名の変更 (`HoToSta`) と説明の削除 <!-- id: 21 -->
+    - [x] `README.md` を `# HoToSta` のみに簡素化 <!-- id: 22 -->
+    - [x] `repo.json` / `HoToSta.json` の名称更新・説明文クリア <!-- id: 23 -->
+    - [x] `HoToSta.csproj` への移行と namespace `HoToSta` の統一 <!-- id: 24 -->
+    - [x] GitHub Actions ワークフロー (`build.yml`) の更新 <!-- id: 25 -->
+    - [x] `package.json` (v1.0.9) & `CHANGELOG.md` 更新 <!-- id: 26 -->
+    - [x] Git コミット・プッシュ & ビルド完了確認 <!-- id: 27 -->

@@ -1,7 +1,7 @@
 using System;
 using Dalamud.Configuration;
 
-namespace HousingToStagehand;
+namespace HoToSta;
 
 [Serializable]
 public sealed class Configuration : IPluginConfiguration

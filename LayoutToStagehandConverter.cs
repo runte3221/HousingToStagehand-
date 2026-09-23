@@ -5,7 +5,7 @@ using System.Numerics;
 using Stagehand.Definitions;
 using Stagehand.Definitions.Objects;
 
-namespace HousingToStagehand;
+namespace HoToSta;
 
 public sealed class ConversionOptions
 {
@@ -38,7 +38,7 @@ public static class LayoutToStagehandConverter
         result.Stage.Info = new StageInfo
         {
             Name = stageName,
-            AuthorName = "HousingToStagehand",
+            AuthorName = "HoToSta",
             VersionString = "1.0",
             Description = string.IsNullOrWhiteSpace(description) ? $"Converted from MakePlace layout ({layout.HouseSize})" : description,
             IntendedTerritoryType = intendedTerritoryType,

@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using Dalamud.Plugin.Services;
 using Lumina.Excel.Sheets;
 
-namespace HousingToStagehand;
+namespace HoToSta;
 
 /// <summary>
 /// Resolves housing item IDs to their corresponding .mdl asset paths for Stagehand BgObjects.

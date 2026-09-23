@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.0.9] - 2026-09-24
+
+### Changed
+- Renamed plugin and internal assembly to `HoToSta`.
+- Removed detailed descriptions across project manifests and documentation.
+
 ## [1.0.8] - 2026-09-24
 
 ### Fixed

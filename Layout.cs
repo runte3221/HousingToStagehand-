@@ -5,7 +5,7 @@ using System.Text.Json.Serialization;
 using Dalamud.Plugin.Services;
 using Lumina.Excel.Sheets;
 
-namespace HousingToStagehand;
+namespace HoToSta;
 
 /// <summary>
 /// MakePlace / ReMakePlace-style housing layout format: https://github.com/RemakePlace/plugin

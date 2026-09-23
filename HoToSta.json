@@ -1,0 +1,17 @@
+{
+  "Author": "runte3221",
+  "Name": "HoToSta",
+  "InternalName": "HoToSta",
+  "AssemblyVersion": "1.0.0.0",
+  "Description": "",
+  "ApplicableVersion": "any",
+  "RepoUrl": "https://github.com/runte3221/HousingToStagehand-",
+  "Tags": [],
+  "DalamudApiLevel": 15,
+  "LoadRequiredState": 0,
+  "LoadSync": false,
+  "CanUnloadAsync": false,
+  "LoadPriority": 0,
+  "Punchline": "",
+  "AcceptsFeedback": false
+}

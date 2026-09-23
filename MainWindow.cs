@@ -9,7 +9,7 @@ using Dalamud.Plugin.Services;
 using Stagehand.Api;
 using WinForms = System.Windows.Forms;
 
-namespace HousingToStagehand;
+namespace HoToSta;
 
 public sealed class MainWindow : Window, IDisposable
 {
@@ -46,7 +46,7 @@ public sealed class MainWindow : Window, IDisposable
         IDataManager dataManager,
         IObjectTable objectTable,
         StagehandIpcClient ipcClient)
-        : base("Housing To Stagehand (/housingtostagehand or /h2s)###housing_to_stagehand_main", ImGuiWindowFlags.None)
+        : base("HoToSta (/hotosta or /h2s)###hotosta_main", ImGuiWindowFlags.None)
     {
         _plugin = plugin;
         _log = log;

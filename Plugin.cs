@@ -4,20 +4,20 @@ using Dalamud.Interface.Windowing;
 using Dalamud.Plugin;
 using Dalamud.Plugin.Services;
 
-namespace HousingToStagehand;
+namespace HoToSta;
 
 public sealed class Plugin : IDalamudPlugin
 {
-    public string Name => "Housing To Stagehand";
+    public string Name => "HoToSta";
 
-    private const string CommandName = "/housingtostagehand";
+    private const string CommandName = "/hotosta";
     private const string ShortCommandName = "/h2s";
 
     private readonly IDalamudPluginInterface _pluginInterface;
     private readonly ICommandManager _commandManager;
     private readonly IPluginLog _log;
 
-    private readonly WindowSystem _windowSystem = new("HousingToStagehand");
+    private readonly WindowSystem _windowSystem = new("HoToSta");
     private readonly MainWindow _mainWindow;
     private readonly StagehandIpcClient _ipcClient;
 
@@ -41,7 +41,7 @@ public sealed class Plugin : IDalamudPlugin
         _ipcClient = new StagehandIpcClient(_pluginInterface, _log);
 
         _log.Information(
-            "HousingToStagehand loaded housing sheets: {Indoor} indoor, {Outdoor} outdoor entries",
+            "HoToSta loaded housing sheets: {Indoor} indoor, {Outdoor} outdoor entries",
             FurnitureResolver.IndoorEntryCount,
             FurnitureResolver.OutdoorEntryCount);
 
@@ -62,12 +62,12 @@ public sealed class Plugin : IDalamudPlugin
 
         _commandManager.AddHandler(CommandName, new CommandInfo(OnCommand)
         {
-            HelpMessage = "Opens the Housing To Stagehand window.",
+            HelpMessage = "Opens the HoToSta window.",
         });
 
         _commandManager.AddHandler(ShortCommandName, new CommandInfo(OnCommand)
         {
-            HelpMessage = "Opens the Housing To Stagehand window.",
+            HelpMessage = "Opens the HoToSta window.",
             ShowInHelp = false,
         });
     }

@@ -2,7 +2,7 @@ using System;
 using System.IO;
 using Stagehand.Definitions;
 
-namespace HousingToStagehand;
+namespace HoToSta;
 
 public static class StagehandExporter
 {
