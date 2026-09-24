@@ -62,23 +62,29 @@ public sealed class FurnitureModelResolver
         var location = indoors ? "indoor" : "outdoor";
         var prefix = indoors ? "fun" : "gar";
 
-        // Primary convention: bgcommon/hou/{location}/general/{model}/bgparts/{prefix}_b0_m{model}.mdl
-        var primaryCandidate = $"bgcommon/hou/{location}/general/{model}/bgparts/{prefix}_b0_m{model}.mdl";
-        if (_dataManager.FileExists(primaryCandidate))
-        {
-            mdlPath = primaryCandidate;
-            return true;
-        }
+        var altLocation = indoors ? "outdoor" : "indoor";
+        var altPrefix = indoors ? "gar" : "fun";
 
-        // Secondary fallback candidates
-        string[] fallbacks =
+        string[] candidates =
         [
+            // Same location candidates
+            $"bgcommon/hou/{location}/general/{model}/bgparts/{prefix}_b0_m{model}.mdl",
+            $"bgcommon/hou/{location}/general/{model}/bgparts/{prefix}_b0_m{model}a.mdl",
+            $"bgcommon/hou/{location}/general/{model}/bgparts/{prefix}_b0_m{model}b.mdl",
             $"bgcommon/hou/{location}/general/{model}/bgparts/{prefix}_b1_m{model}.mdl",
             $"bgcommon/hou/{location}/general/{model}/bgparts/{prefix}_a0_m{model}.mdl",
             $"bgcommon/hou/{location}/general/{model}/bgparts/{prefix}_m{model}.mdl",
+
+            // Cross-location fallbacks (some indoor furnishings use outdoor asset folders, e.g. Chilled Red, Starlight Dodo)
+            $"bgcommon/hou/{altLocation}/general/{model}/bgparts/{altPrefix}_b0_m{model}.mdl",
+            $"bgcommon/hou/{altLocation}/general/{model}/bgparts/{altPrefix}_b0_m{model}a.mdl",
+            $"bgcommon/hou/{altLocation}/general/{model}/bgparts/{altPrefix}_b0_m{model}b.mdl",
+            $"bgcommon/hou/{altLocation}/general/{model}/bgparts/{altPrefix}_b1_m{model}.mdl",
+            $"bgcommon/hou/{altLocation}/general/{model}/bgparts/{altPrefix}_a0_m{model}.mdl",
+            $"bgcommon/hou/{altLocation}/general/{model}/bgparts/{altPrefix}_m{model}.mdl",
         ];
 
-        foreach (var candidate in fallbacks)
+        foreach (var candidate in candidates)
         {
             if (_dataManager.FileExists(candidate))
             {
@@ -87,8 +93,7 @@ public sealed class FurnitureModelResolver
             }
         }
 
-        // If file existence check fails, return primary candidate anyway (useful in case Lumina vfs differs)
-        mdlPath = primaryCandidate;
-        return true;
+        // Return false if no model exists in game assets
+        return false;
     }
 }

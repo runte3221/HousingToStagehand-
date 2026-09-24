@@ -164,13 +164,18 @@ public static class LayoutToStagehandConverter
         if (!byte.TryParse(clean.AsSpan(2, 2), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out var g)) return false;
         if (!byte.TryParse(clean.AsSpan(4, 2), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out var b)) return false;
 
-        // Stagehand expects standard sRGB [0..1] in BgObjectDefinition.DyeColor.
-        // Inside Stagehand's LiveBgObject:
-        //   byteColor = Sqrt(val) * 255
-        // Then inside the game's TrySetStainColor:
-        //   LinearFloatColor = (byteColor / 255)^2 = Sqrt(val)^2 = val
-        // Therefore, passing standard sRGB [0..1] exactly cancels out and preserves the intended color.
-        color = new Vector4(r / 255f, g / 255f, b / 255f, 1f);
+        // Stagehand receives Linear RGB [0..1] in BgObjectDefinition.DyeColor.
+        // Inside Stagehand's LiveBgObject.set_DyeColor:
+        //   var srgbColor = new Vector4(MathF.Sqrt(value.X), MathF.Sqrt(value.Y), MathF.Sqrt(value.Z), value.Z) * byte.MaxValue;
+        //   var byteColor = new ByteColor() { R = (byte)srgbColor.X, G = (byte)srgbColor.Y, B = (byte)srgbColor.Z, A = (byte)srgbColor.W };
+        // To ensure byteColor gets the exact original byte values (e.g. 43 for soot black):
+        //   MathF.Sqrt(Linear) * 255 = originalByte
+        //   Linear = (originalByte / 255)^2
+        // Therefore, passing (r/255)^2 perfectly cancels MathF.Sqrt and passes exact original bytes to the game engine.
+        var rLin = MathF.Pow(r / 255f, 2f);
+        var gLin = MathF.Pow(g / 255f, 2f);
+        var bLin = MathF.Pow(b / 255f, 2f);
+        color = new Vector4(rLin, gLin, bLin, 1f);
         return true;
     }
 }

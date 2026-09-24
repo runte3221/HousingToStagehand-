@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.0.14] - 2026-09-24
+
+### Fixed
+- Enhanced furniture model resolution by supporting variant suffixes (e.g. `fun_b0_m1026a.mdl` for Queen's Rest) and automatic cross-location fallbacks between indoor and outdoor asset folders (e.g. Chilled Red, Starlight Dodo, Riviera Table Chronometer). Resolves missing furniture issues.
+- Corrected dye color calculation by passing linear RGB (`MathF.Pow(c / 255f, 2f)`) into Stagehand, perfectly cancelling Stagehand's internal `MathF.Sqrt` and ensuring exact 100% bit-accurate original colors (e.g. soot black `#2B2923`) are delivered to the game engine without washed-out gray rendering.
+- Prevented non-existent model paths from being emitted to Stagehand stages by returning false when all file existence checks fail.
+
 ## [1.0.13] - 2026-09-24
 
 ### Fixed

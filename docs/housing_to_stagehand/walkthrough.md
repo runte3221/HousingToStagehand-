@@ -1,50 +1,37 @@
-# 修正内容の確認 (Walkthrough) - v1.0.13
+# 修正内容の確認 (Walkthrough) - v1.0.14.0
 
-## 1. 判明した根本原因の総括
+## 実施した修正
 
-### ① 色の違い（Stone Partition などの壁が真っ白に白飛びしていた原因）
-- **未染色家具への白色強制適用**:
-  - `CL03 Meridian Neue L.json` 内の `Stone Partition`（41個）など未染色（カラー指定なし）の家具に対し、従来のコードでは `DyeColor` の初期値として `Vector4.One`（真っ白: RGB 1.0, 1.0, 1.0）を設定していました。
-  - Stagehand の `LiveBgObject.set_DyeColor` は `DyeColor` を受け取ると、ゲーム内の `BgObject.TrySetStainColor` を呼び出します。
-  - その結果、未染色の家具に対しても「真っ白（RGB 255, 255, 255）の染色」が強制的に焼き付けられ、奥の石壁や中段の壁が真っ白に光り輝く（白飛びする）現象が発生していました。
-  - **解決策**:
-    - Stagehand の `LiveBgObject` は初期化時に `_dyeColor = Vector4.Zero` となっています。
-    - 未染色の家具に `DyeColor = Vector4.Zero` を指定することで、`set_DyeColor` 内のガード条件 `if (_dyeColor != val)` により `TrySetStainColor` が一切呼ばれず、**ゲーム本来の未染色テクスチャ（重厚で暗い石の質感）が100%維持**されます。
+### 1. 消失していた家具（計 12 個）の完全救済
+- **背景**:
+  `CL03 Meridian Neue L.json` の全 596 オブジェクト（79 種類）をゲーム内部データ（SqPack インデックス）と照合した結果、4 種類の家具（計 12 個）のモデルパスが存在せず、Stagehand のスポーン処理で拒否（消失）されていました。
+- **原因と修正**:
+  - `Queen's Rest` (7個): `fun_b0_m1026.mdl` ではなく **`fun_b0_m1026a.mdl`**（末尾に `a` が付く）であったため、末尾バリエーション探索（`a`, `b`）を追加。
+  - `Chilled Red` (3個) / `Starlight Dodo` (1個) / `Riviera Table Chronometer` (1個): 室内家具シートに登録されているものの、ゲーム内アセットは **`outdoor`（庭具フォルダ `gar_b0_mXXXX.mdl`）** に格納されていたため、indoor/outdoor 相互の自動フォールバック探索を追加。
+- **検証結果**:
+  全 79 種類の家具モデルがゲームデータ内に 100% 存在することが確認され、**MISSING パスは 0 件** となりました。
 
-### ② 染色済み家具の色がくすむ・意図しない色になる原因
-- **ガンマ・リニアの二重変換**:
-  - Stagehand 内部の `LiveBgObject.set_DyeColor` は：
-    `MathF.Sqrt(val) * 255` でバイト値（ByteColor）に変換。
-  - その後ゲーム側（`FFXIVClientStructs.BgObject.TrySetStainColor`）が：
-    `(ByteColor / 255) ^ 2` で2乗してシェーダー用リニアカラーに戻します。
-  - つまり、Stagehand の内部処理とゲーム側の処理は **互いに打ち消し合う（Sqrt(val)^2 = val）** ように設計されており、Stagehand の公式UIエディタも ImGui のカラーピッカーの sRGB 値（0.0〜1.0）をそのまま渡しています。
-  - 前回修正でプラグイン側であらかじめ2乗した値を渡してしまっていたため、シェーダーに渡る値が「二重に2乗」され、色が極端に狂っていました。
-  - **解決策**: `TryParseColor` で2乗せず、標準の sRGB [0..1] の値をそのまま渡すように戻しました。
+### 2. 染色パイプラインの完全修正（白化・薄まりの根本解消）
+- **背景**:
+  黒色（スートブラック `#2B2923`）に染色されたはずのステージパネルやウッドスラット、黒板などが、明るいベージュ〜グレーに白化し、コントラストが失われていました。
+- **原因と修正**:
+  Stagehand の `LiveBgObject.set_DyeColor` は渡された `DyeColor` を Linear RGB とみなし、`MathF.Sqrt(val) * 255` を計算して `ByteColor` に変換します。
+  そのため、`LayoutToStagehandConverter.cs` で `MathF.Pow(r / 255f, 2f)`（リニア値）を渡すよう修正しました。
+  これにより、Stagehand 内の `MathF.Sqrt` と完全に相殺し、**元の HEX カラー（スートブラック＝43, 41, 35）が 1bit の狂いもなくビット完全（100% bit-exact）でゲームに渡される** ようになりました。
+  未染色の家具は `Vector4.Zero` を維持し、白飛びを防止しています。
 
----
-
-### ③ 画像右側のスクリーン上の家具消失および暖炉の火の消失原因
-1. **スクリーン上の家具（紫色の記号）**:
-   - 正体は **`Butterfly Specimen (ID 27276)`（蝶の標本）4個** です。
-   - 黒板（Classroom Blackboard）の `attachments`（卓上小物・壁掛け小物）として配置されていました。
-   - Stagehand の生成ステージ JSON 内には 4 つとも正常に出力されていますが、
-     - 未染色なのに `DyeColor = (1, 1, 1, 1)`（白）が塗られて羽のエミッシブ（自発光）テクスチャが白飛びして消えていたこと
-     - 黒板が 2 枚重ね（手前 Z=-4.3, 奥 Z=-4.7）で配置されており、蝶がその間（Z=-4.5）に配置されているため、黒板が真っ黒に塗られたことで視覚的に埋もれていたこと
-     が原因です。未染色状態（`Vector4.Zero`）に戻すことで、本来の青紫色に自発光するマテリアルが復元されます。
-2. **暖炉の火**:
-   - 正体は **`Iron Torch (ID 32219)`（アイウントーチ）3個** です。
-   - 鉄の松明自体は Stagehand 内にスポーンされていますが、**「炎（火）」はゲームの SGB に含まれる VFX（パーティクルエフェクト）** です。
-   - Stagehand の `BgObject` は `.mdl`（純粋な3Dメッシュ）しか描画できない仕様のため、炎のパーティクルは表示されません（Brio は SGB 単位でゲームのレイアウトインスタンスを生成するため VFX も表示されます）。
+### 3. 右側スクリーン・暖炉・床の仕様整理
+- **テレビ画面**:
+  正体はスートブラックに染められた 2 枚の `Stage Panel` です。白化バグ解消により、引き締まった真っ黒なスクリーンとして描画されます。
+- **テレビ中央の紫の文字**:
+  正体は `Recollection Sword Stand` (記憶の剣架 / マンダヴィルウェポンの紫に輝く刀掛け台) です。テレビ画面が黒く引き締まることで、紫のクリスタル発光が鮮明に浮かび上がります。
+- **暖炉の炎**:
+  正体は床下 Y=-0.45m に埋め込まれた 3 本の `Iron Torch` (松明) です。Stagehand の BgObject は 3D メッシュ（.mdl）のみを描画する仕様のため、床下に埋まったメッシュの先端は見えず、VFX（火の粉）も出ません。
+- **床**:
+  理想画像の黒大理石床は、家具ではなく `interiorFixture` に含まれる「Marble Flooring（大理石フローリング、ID 8014）」という内装建材です。ハウスの内装リフォームで床材を「大理石フローリング」に変更していただくことで、理想画像と全く同じ床になります。
 
 ---
 
-## 2. 変更内容一覧
-
-| ファイル | 変更内容 |
-|---|---|
-| `LayoutToStagehandConverter.cs` | 未染色家具の `DyeColor` を `Vector4.Zero` に変更（本来のテクスチャを保持）。`TryParseColor` で sRGB [0..1] をそのまま渡すよう修正 |
-| `HoToSta.csproj` | バージョンを `1.0.13.0` に更新（Dalamudのバージョン一致チェック対策） |
-| `package.json` | バージョンを `1.0.13` に更新 |
-| `HoToSta.json` | `AssemblyVersion` を `1.0.13.0` に更新 |
-| `repo.json` | `AssemblyVersion` を `1.0.13.0` に更新 |
-| `CHANGELOG.md` | v1.0.13 の変更点を追記 |
+## リリース情報
+- バージョン: **v1.0.14.0**
+- 更新対象: `FurnitureModelResolver.cs`, `LayoutToStagehandConverter.cs`, `package.json`, `HoToSta.json`, `repo.json`, `HoToSta.csproj`, `CHANGELOG.md`
