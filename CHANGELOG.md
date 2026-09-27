@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.0.15] - 2026-09-27
+
+### Added
+- Added SyncThief plugin entry to repo.json for unified plugin repository management.
+
 ## [1.0.14] - 2026-09-24
 
 ### Fixed
